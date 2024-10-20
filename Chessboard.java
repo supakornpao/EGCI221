@@ -1,5 +1,7 @@
 package Project1;
 
+import java.util.ArrayDeque;
+
 public class Chessboard {
     private int size;
     private Element[][] element;
@@ -50,15 +52,22 @@ public class Chessboard {
             if (!board[row][i].getStatus())
                 return false;
 
+
+
+
         // Check upper diagonal on left side
         for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
             if (!board[i][j].getStatus())
                 return false;
 
+
+
+
         // Check lower diagonal on left side
         for (i = row, j = col; j >= 0 && i < size; i++, j--)
             if (!board[i][j].getStatus())
                 return false;
+
 
         return true;
     }
@@ -67,8 +76,11 @@ public class Chessboard {
     {
         // Base case: If all queens are placed
         // then return true
+        //ArrayDeque<Integer> column = new ArrayDeque<>();
+
         if (col >= size)
             return true;
+
 
         // Consider this column and try placing
         // this queen in all rows one by one
@@ -82,6 +94,7 @@ public class Chessboard {
                 board[i][col].setObject("Q");
 
                 // Recur to place rest of the queens
+
                 if (solveNQUtil(board, col + 1))
                     return true;
 
@@ -97,11 +110,11 @@ public class Chessboard {
         return false;
     }
 
-    public void solveNQ(){
-        if(!solveNQUtil(element, 0 )){
+    public void solveNQ(int column){
+        if(!solveNQUtil(element, column)){
             System.out.println("No solution");
         }
-        else print();
+        print();
 
     }
 

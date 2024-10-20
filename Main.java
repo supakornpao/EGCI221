@@ -32,22 +32,25 @@ public class Main {
                 System.out.println("yes");
                 try {
                     System.out.println("Enter row: ");
-                    row = scan.nextInt();
+                    row = scan.nextInt()-1;
                     System.out.println("Enter column: ");
-                    column = scan.nextInt();
+                    column = scan.nextInt()-1;
 
-                    chessboard.placeObject(row - 1, column - 1, "Q");
+                    chessboard.placeObject(row, column, "Q");
 
                     chessboard.print();
+
+                    chessboard.solveNQ(column+1);
                     correctPos = true;
                 }
                 catch (Exception e){
                     System.out.println(e);
                 }
+
             }
         }
 
-        chessboard.solveNQ();
+
 
 
 
