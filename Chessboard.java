@@ -3,7 +3,7 @@ package Project1;
 
 
 public class Chessboard {
-    private int size, columnOccupied, rowOccupied;
+    private int size, columnOccupied = -1, rowOccupied = -1;
     private Element[][] element;
     public Chessboard(int size){
         this.size = size;
@@ -86,13 +86,13 @@ public class Chessboard {
     }
 
 
-    boolean solveNQUtil(Element[][] board, int col, int row)
+    boolean solveNQUtil(Element[][] board, int col)
     {
         if (col >= size)
             return true;
 
         if (col == columnOccupied) {
-            return solveNQUtil(board, col + 1, size);
+            return solveNQUtil(board, col + 1);
         }
 
         // Consider this column and try placing
@@ -107,11 +107,11 @@ public class Chessboard {
                 // Place this queen in board[i][col]
 
                 board[i][col].setObject("Q");
-                System.out.println("Try placing at row"+i +" column "+col);
+                System.out.printf("Place object at from row %d column %d \n",i+1,col+1);
 
                 // Recur to place rest of the queens
 
-                if (solveNQUtil(board, col+1,i))
+                if (solveNQUtil(board, col+1))
                     return true;
 
                 // If placing queen in board[i][col]
@@ -119,7 +119,7 @@ public class Chessboard {
                 // remove queen from board[i][col]
 
                 board[i][col].removeObject(); // BACKTRACK
-                System.out.println("Backtracking from "+i +" column "+col);
+                System.out.printf("Backtracking from row %d column %d \n",i+1,col+1);
             }
 
         }
@@ -130,12 +130,12 @@ public class Chessboard {
     }
 
     public void solveNQ(int row, int column){
-        if (row > 0 && column > 0) {
+        if (column > 0) {
             rowOccupied = row;
             columnOccupied = column;
         }
 
-        if(!solveNQUtil(element, 0,0)){
+        if(!solveNQUtil(element, 0)){
             System.out.println("No solution");
         }
         print();
