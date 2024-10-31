@@ -28,8 +28,8 @@ public class Main {
         if(userInput.equalsIgnoreCase("y")) {
             int row,column;
             boolean correctPos = false;
+            System.out.println("yes");
             while(!correctPos) {
-                System.out.println("yes");
                 try {
                     System.out.println("Enter row: ");
                     row = scan.nextInt()-1;
@@ -40,7 +40,7 @@ public class Main {
 
                     chessboard.print();
 
-                    chessboard.solveNQ(column+1);
+                    chessboard.solveNQ(row, column);
                     correctPos = true;
                 }
                 catch (Exception e){
@@ -49,9 +49,7 @@ public class Main {
 
             }
         }
-
-
-
+        else chessboard.solveNQ(0,0);
 
 
     }

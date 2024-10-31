@@ -1,9 +1,9 @@
 package Project1;
 
-import java.util.ArrayDeque;
+
 
 public class Chessboard {
-    private int size;
+    private int size, columnOccupied, rowOccupied;
     private Element[][] element;
     public Chessboard(int size){
         this.size = size;
@@ -19,13 +19,13 @@ public class Chessboard {
         for(int i = -1; i < size ; i++){
             if(i==-1) {
                 for (int j = 0; j < size; j++) {
-                    if (j == 0) System.out.printf("%9d", j+1 );
-                    else System.out.printf("%2d", j+1 );
+                    if (j == 0) System.out.printf("%13d", j+1 );
+                    else System.out.printf("%3d", j+1 );
                 }
             }
             else{
-                System.out.printf("\nrow %d",i+1);
-                System.out.print(" | ");
+                System.out.printf("\nrow %4d",i+1);
+                System.out.print("  | ");
                 for(int j = 0; j<size;j++){
                     element[i][j].print();
                 }
@@ -47,12 +47,17 @@ public class Chessboard {
     {
         int i, j;
 
+
         // Check this row on left side
         for (i = 0; i < col; i++)
             if (!board[row][i].getStatus())
                 return false;
 
-
+        //Check this row on right side
+        for(i = col; i < size; i++){
+            if(!board[row][i].getStatus())
+                return false;
+        }
 
 
         // Check upper diagonal on left side
@@ -60,7 +65,10 @@ public class Chessboard {
             if (!board[i][j].getStatus())
                 return false;
 
-
+        // Check upper diagonal on right side
+        for (i = row, j = col; i >= 0 && j <size; i--, j++)
+            if (!board[i][j].getStatus())
+                return false;
 
 
         // Check lower diagonal on left side
@@ -68,19 +76,24 @@ public class Chessboard {
             if (!board[i][j].getStatus())
                 return false;
 
+        // Check lower diagonal on right side
+        for (i = row, j = col; j < size && i < size; i++, j++)
+            if (!board[i][j].getStatus())
+                return false;
+
 
         return true;
     }
 
-    boolean solveNQUtil(Element[][] board, int col)
-    {
-        // Base case: If all queens are placed
-        // then return true
-        //ArrayDeque<Integer> column = new ArrayDeque<>();
 
+    boolean solveNQUtil(Element[][] board, int col, int row)
+    {
         if (col >= size)
             return true;
 
+        if (col == columnOccupied) {
+            return solveNQUtil(board, col + 1, size);
+        }
 
         // Consider this column and try placing
         // this queen in all rows one by one
@@ -88,21 +101,27 @@ public class Chessboard {
 
             // Check if the queen can be placed on
             // board[i][col]
+
             if (isSafe(board, i, col)) {
 
                 // Place this queen in board[i][col]
+
                 board[i][col].setObject("Q");
+                System.out.println("Try placing at row"+i +" column "+col);
 
                 // Recur to place rest of the queens
 
-                if (solveNQUtil(board, col + 1))
+                if (solveNQUtil(board, col+1,i))
                     return true;
 
                 // If placing queen in board[i][col]
                 // doesn't lead to a solution then
                 // remove queen from board[i][col]
+
                 board[i][col].removeObject(); // BACKTRACK
+                System.out.println("Backtracking from "+i +" column "+col);
             }
+
         }
 
         // If the queen can not be placed in any row in
@@ -110,14 +129,18 @@ public class Chessboard {
         return false;
     }
 
-    public void solveNQ(int column){
-        if(!solveNQUtil(element, column)){
+    public void solveNQ(int row, int column){
+        if (row > 0 && column > 0) {
+            rowOccupied = row;
+            columnOccupied = column;
+        }
+
+        if(!solveNQUtil(element, 0,0)){
             System.out.println("No solution");
         }
         print();
 
     }
-
 
 
 }
@@ -126,15 +149,19 @@ class Element{
     int row, column;
     private String object = ".";
     private boolean isEmpty;
+
+    boolean input;
+
     public Element(int row, int column){
         this.row = row;
         this.column = column;
         isEmpty = true;
+        input = false;
     }
 
     public void print(){
         System.out.print(object);
-        System.out.print(" ");
+        System.out.print("  ");
     }
 
     public void setObject(String n){
@@ -142,9 +169,6 @@ class Element{
         isEmpty = false;
     }
 
-    public String getObject(){
-        return object;
-    }
 
     public boolean getStatus(){
         return isEmpty;
