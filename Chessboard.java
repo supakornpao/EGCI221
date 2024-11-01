@@ -92,31 +92,19 @@ public class Chessboard {
             return true;
 
         if (col == columnOccupied) {
-            return solveNQUtil(board, col + 1);
+            return solveNQUtil(board, col + 1); //Skip column that has user input
         }
 
-        // Consider this column and try placing
-        // this queen in all rows one by one
         for (int i = 0; i < size; i++) {
 
-            // Check if the queen can be placed on
-            // board[i][col]
-
             if (isSafe(board, i, col)) {
-
-                // Place this queen in board[i][col]
 
                 board[i][col].setObject("Q");
                 System.out.printf("Place object at from row %d column %d \n",i+1,col+1);
 
-                // Recur to place rest of the queens
 
                 if (solveNQUtil(board, col+1))
                     return true;
-
-                // If placing queen in board[i][col]
-                // doesn't lead to a solution then
-                // remove queen from board[i][col]
 
                 board[i][col].removeObject(); // BACKTRACK
                 System.out.printf("Backtracking from row %d column %d \n",i+1,col+1);
@@ -124,8 +112,6 @@ public class Chessboard {
 
         }
 
-        // If the queen can not be placed in any row in
-        // this column col, then return false
         return false;
     }
 
